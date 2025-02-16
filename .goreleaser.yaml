@@ -1,0 +1,85 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+
+# The lines below are called `modelines`. See `:help modeline`
+# Feel free to remove those if you don't want/need to use them.
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+    # you may remove this if you don't need go generate
+    - go generate ./...
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+archives:
+  - formats:
+      - tar.gz
+    # this name template makes the OS and Arch compatible with the results of `uname`.
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    wrap_in_directory: true
+    # use zip for windows archives
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+
+nfpms:
+  - maintainer: Ben Armston
+    homepage: https://github.com/benarmston/rpt
+    description: |-
+      A CLI tool for repeating command line invocations.
+    license: MIT
+    formats:
+      - apk
+      - deb
+      - rpm
+      - archlinux
+    provides:
+      - rpt
+    contents:
+      - src: README.md
+        dst: /usr/share/doc/{{ .ProjectName }}/
+      - src: LICENSE
+        dst: /usr/share/doc/{{ .ProjectName }}/
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-devel"
+
+release:
+  draft: true
+  replace_existing_draft: true
+  prerelease: true
+  make_latest: false
+  mode: append
+  footer: >-
+
+    ---
+
+    Released by [GoReleaser](https://github.com/goreleaser/goreleaser).
