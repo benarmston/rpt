@@ -118,10 +118,10 @@ func runOnce(cmd *exec.Cmd) error {
 		return fmt.Errorf("creating stderr pipe: %w", err)
 	}
 	go func() {
-		io.Copy(os.Stdout, stdout)  //nolint:errcheck
+		io.Copy(os.Stdout, stdout) //nolint:errcheck
 	}()
 	go func() {
-		io.Copy(os.Stderr, stderr)  //nolint:errcheck
+		io.Copy(os.Stderr, stderr) //nolint:errcheck
 	}()
 	if err = cmd.Start(); err != nil {
 		return fmt.Errorf("starting command: %w", err)
