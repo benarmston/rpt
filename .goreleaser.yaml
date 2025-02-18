@@ -66,8 +66,30 @@ changelog:
   sort: asc
   filters:
     exclude:
-      - "^docs:"
       - "^test:"
+      - "^test\\("
+      - "Batman!"
+  groups:
+    - title: Dependency updates
+      regexp: '^.*?(.+)\(deps\)!?:.+$'
+      order: 300
+    - title: "New Features"
+      regexp: '^.*?feat(\(.+\))??!?:.+$'
+      order: 100
+    - title: "Security updates"
+      regexp: '^.*?sec(\(.+\))??!?:.+$'
+      order: 150
+    - title: "Bug fixes"
+      regexp: '^.*?(fix|refactor)(\(.+\))??!?:.+$'
+      order: 200
+    - title: "Documentation updates"
+      regexp: ^.*?docs?(\(.+\))??!?:.+$
+      order: 400
+    - title: "Build process updates"
+      regexp: ^.*?(build|ci)(\(.+\))??!?:.+$
+      order: 400
+    - title: Other work
+      order: 9999
 
 snapshot:
   version_template: "{{ incpatch .Version }}-devel"
