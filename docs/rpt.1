@@ -1,17 +1,13 @@
 .nh
-.TH rpt 1
+.TH rpt 1 "" "" "rpt Manual"
 
 .SH NAME
 rpt \- repeat running a command a number of times
 
 
 .SH SYNOPSIS
-rpt
-
 .EX
-[--delay|-d]=[value]
-[--times|-t]=[value]
-[--verbose|-v]
+rpt [OPTIONS] COMMAND [ARGUMENTS...]
 .EE
 
 
@@ -19,19 +15,24 @@ rpt
 Repeatedly run COMMAND with ARGUMENTS.  The number of times to run COMMAND
 is determined by OPTIONS.
 
-.PP
-\fBUsage\fP:
-
-.EX
-rpt [OPTIONS] COMMAND [ARGUMENTS...]
-.EE
-
 
 .SH OPTIONS
-\fB--delay, -d\fP="": wait \fBDURATION\fR between runs (default: 0s)
+.TP
+\fB-d=DURATION, --delay=DURATION\fP
+wait \fBDURATION\fR between runs (default: 0s)
 
-.PP
-\fB--times, -t\fP="": number of \fBTIMES\fR to run COMMAND (default: 1)
+.TP
+\fB-t=TIMES, --times=TIMES\fP
+number of \fBTIMES\fR to run COMMAND (default: 1)
 
-.PP
-\fB--verbose, -v\fP: print debugging messages
+.TP
+\fB-v, --verbose\fP
+print debugging messages
+
+
+.SH AUTHOR
+Ben Armston
+
+
+.SH COPYRIGHT
+Copyright 2025 Ben Armston. Licensed under the MIT License.

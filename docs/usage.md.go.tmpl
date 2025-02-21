@@ -1,0 +1,32 @@
+{{ if .SectionNum }}# {{ .App.Name }} {{ .SectionNum }} "" "" "{{ .App.Name }} Manual"
+
+{{ end }}# NAME
+
+{{ .App.Name }}{{ if .App.Usage }} - {{ .App.Usage }}{{ end }}
+
+# SYNOPSIS
+
+```
+{{ if .App.UsageText }}{{ .App.UsageText }}{{ else }}{{ .App.Name }} [GLOBAL OPTIONS] command [COMMAND OPTIONS] [ARGUMENTS...]{{ end }}
+```
+
+# DESCRIPTION
+
+{{ if .App.Description }}{{ .App.Description }}{{ end }}{{ if .GlobalArgs }}
+
+# OPTIONS
+{{ range $v := .GlobalArgs }}
+{{ $v }}{{ end }}
+{{ end }}{{ if .Commands }}
+
+# COMMANDS
+{{ range $v := .Commands }}
+{{ $v }}{{ end }}{{ end }}{{ if .App.Authors }}
+
+# AUTHOR
+{{ range $v := .App.Authors }}
+{{ $v }}{{ end }}{{ end }}{{ if .App.Copyright }}
+
+# COPYRIGHT
+
+{{.App.Copyright}}{{ if .License }}. {{ .License }}{{ end }}{{ end }}

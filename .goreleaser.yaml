@@ -47,7 +47,7 @@ archives:
     files:
       - README.md
       - LICENSE
-      - docs/cli.md
+      - docs/usage.md
 
 nfpms:
   - maintainer: Ben Armston

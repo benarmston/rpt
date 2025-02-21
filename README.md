@@ -26,7 +26,7 @@ appropriate tools.
 
 ## Usage
 
-See [docs/cli.md](docs/cli.md) for usage.
+See [docs/usage.md](docs/usage.md) for usage.
 
 ## Contributing
 

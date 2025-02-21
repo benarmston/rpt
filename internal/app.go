@@ -1,4 +1,4 @@
-package main
+package rpt
 
 import (
 	"errors"
@@ -13,13 +13,19 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-var (
-	version = "dev"
-	commit  = "none"
-	date    = "unknown"
-)
+type Version struct {
+	Version string
+	Commit string
+	Date string
+}
 
-func newApp() *cli.App {
+var DefaultVersion = Version{
+	Version: "dev",
+	Commit:  "unknown",
+	Date:    "unknown",
+}
+
+func NewApp(version Version) *cli.App {
 	cli.VersionFlag = &cli.BoolFlag{
 		Name:               "version",
 		Usage:              "print the version",
@@ -27,9 +33,9 @@ func newApp() *cli.App {
 	}
 	cli.VersionPrinter = func(ctx *cli.Context) {
 		if ctx.Bool("verbose") {
-			fmt.Printf("version=%s revision=%s date=%s\n", version, commit, date)
+			fmt.Printf("version=%s revision=%s date=%s\n", version.Version, version.Commit, version.Date)
 		} else {
-			fmt.Printf("%s\n", version)
+			fmt.Printf("%s\n", version.Version)
 		}
 	}
 	appHelpTemplate := cli.AppHelpTemplate
@@ -43,9 +49,10 @@ func newApp() *cli.App {
 		UsageText:             "rpt [OPTIONS] COMMAND [ARGUMENTS...]",
 		Description:           "Repeatedly run COMMAND with ARGUMENTS.  The number of times to run COMMAND\nis determined by OPTIONS.",
 		HideHelpCommand:       true,
-		Version:               version,
+		Version:               version.Version,
 		Suggest:               true,
-		Copyright:             "(c) 2025 Ben Armston",
+		Authors:               []*cli.Author{{Name: "Ben Armston", Email: ""}},
+		Copyright:             "Copyright 2025 Ben Armston",
 		Flags: []cli.Flag{
 			&cli.Int64Flag{
 				Name:    "times",

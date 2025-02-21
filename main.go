@@ -1,11 +1,16 @@
-//go:build !docs
-// +build !docs
-
 package main
 
 import (
 	"log"
 	"os"
+
+	"github.com/benarmston/rpt/internal"
+)
+
+var (
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
 )
 
 func init() {
@@ -14,7 +19,8 @@ func init() {
 }
 
 func main() {
-	app := newApp()
+	version := rpt.Version{Version: version, Commit: commit, Date: date}
+	app := rpt.NewApp(version)
 
 	if err := app.Run(os.Args); err != nil {
 		log.Fatalf(
