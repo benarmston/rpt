@@ -103,3 +103,6 @@ jobs:
 
       - name: Go Vet
         run: go vet ./...
+
+      - name: Check docs
+        run: go run -t docs ./docs/ && git diff --exit-code
