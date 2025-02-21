@@ -26,28 +26,14 @@ appropriate tools.
 
 ## Usage
 
-```bash
-rpt [options] command [argument ...]
-```
-
-Common options:
-
-<dl>
-    <dt>--times TIMES</dt>
-    <dd>number of TIMES to run COMMAND (default: 1)</dd>
-    <dt>--delay DURATION</dt>
-    <dd>wait DURATION between runs (default: 0s)</dd>
-</dl>
-
-See `rpt --help` for a complete list of options.
-
+See [docs/cli.md](docs/cli.md) for usage.
 
 ## Contributing
 
 If you found a bug or have a feature request, [create a new
 issue](https://github.com/benarmston/rpt/issues/new).
 
-# Copyright and License
+## Copyright and License
 
 Copyright (C) 2025 Ben Armston.  Licensed under the MIT License, see
 [LICENSE](LICENSE) for details.

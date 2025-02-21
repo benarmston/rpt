@@ -18,6 +18,8 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
+    flags:
+      - -tags=urfave_cli_no_docs
     goos:
       - linux
       # - darwin
@@ -42,6 +44,10 @@ archives:
       - goos: windows
         formats:
           - zip
+    files:
+      - README.md
+      - LICENSE
+      - docs/cli.md
 
 nfpms:
   - maintainer: Ben Armston
@@ -61,6 +67,8 @@ nfpms:
         dst: /usr/share/doc/{{ .ProjectName }}/
       - src: LICENSE
         dst: /usr/share/doc/{{ .ProjectName }}/
+      - src: docs/rpt.1
+        dst: /usr/share/man/man1/rpt.1
 
 changelog:
   sort: asc

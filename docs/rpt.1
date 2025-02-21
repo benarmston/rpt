@@ -1,0 +1,37 @@
+.nh
+.TH rpt 1
+
+.SH NAME
+rpt \- repeat running a command a number of times
+
+
+.SH SYNOPSIS
+rpt
+
+.EX
+[--delay|-d]=[value]
+[--times|-t]=[value]
+[--verbose|-v]
+.EE
+
+
+.SH DESCRIPTION
+Repeatedly run COMMAND with ARGUMENTS.  The number of times to run COMMAND
+is determined by OPTIONS.
+
+.PP
+\fBUsage\fP:
+
+.EX
+rpt [OPTIONS] COMMAND [ARGUMENTS...]
+.EE
+
+
+.SH OPTIONS
+\fB--delay, -d\fP="": wait \fBDURATION\fR between runs (default: 0s)
+
+.PP
+\fB--times, -t\fP="": number of \fBTIMES\fR to run COMMAND (default: 1)
+
+.PP
+\fB--verbose, -v\fP: print debugging messages
