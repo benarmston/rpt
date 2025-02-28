@@ -18,19 +18,19 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/benarmston/rpt/internal"
 	"github.com/cpuguy83/go-md2man/v2/md2man"
 	"github.com/urfave/cli/v2"
-	"github.com/benarmston/rpt/internal"
 )
 
 func main() {
 	app := rpt.NewApp(rpt.DefaultVersion)
 	license := "Licensed under the MIT License."
-	file :=  "docs/usage.md"
+	file := "docs/usage.md"
 	writeMarkdown(app, license, file)
 	fmt.Printf("Wrote markdown docs to %s\n", file)
 
-	file =  "docs/rpt.1"
+	file = "docs/rpt.1"
 	writeMan(app, license, file)
 	fmt.Printf("Wrote markdown docs to %s\n", file)
 }
@@ -49,7 +49,6 @@ func writeMarkdown(app *cli.App, license, path string) {
 		log.Fatalf("writing output: %s", err)
 	}
 }
-
 
 func writeMan(app *cli.App, license, path string) {
 	man, err := appToMan(app, license)
@@ -92,7 +91,7 @@ func appToMan(a *cli.App, license string) (string, error) {
 
 type cliTemplate struct {
 	App        *cli.App
-	SectionNum   int
+	SectionNum int
 	Commands   []string
 	GlobalArgs []string
 	License    string

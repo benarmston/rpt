@@ -15,8 +15,8 @@ import (
 
 type Version struct {
 	Version string
-	Commit string
-	Date string
+	Commit  string
+	Date    string
 }
 
 var DefaultVersion = Version{

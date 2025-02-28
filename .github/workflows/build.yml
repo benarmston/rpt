@@ -105,4 +105,4 @@ jobs:
         run: go vet ./...
 
       - name: Check docs
-        run: go run -t docs ./docs/ && git diff --exit-code
+        run: go run -tags docs ./docs/ && git diff --exit-code
