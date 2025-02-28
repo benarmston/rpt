@@ -1,0 +1,25 @@
+NAME:
+   rpt - repeat running a command a number of times
+
+USAGE:
+   rpt [OPTIONS] COMMAND [ARGUMENTS...]
+
+VERSION:
+   dev
+
+DESCRIPTION:
+   Repeatedly run COMMAND with ARGUMENTS.  The number of times to run COMMAND
+   is determined by OPTIONS.
+
+AUTHOR:
+   Ben Armston
+
+OPTIONS:
+   --times TIMES, -t TIMES        number of TIMES to run COMMAND (default: 1)
+   --delay DURATION, -d DURATION  wait DURATION between runs (default: 0s)
+   --verbose, -v                  print debugging messages (default: false)
+   --help, -h                     show help
+   --version                      print the version
+
+COPYRIGHT:
+   Copyright 2025 Ben Armston
