@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -16,20 +15,7 @@ import (
 )
 
 var update = flag.Bool("update", false, "update golden files")
-var binaryName = "rpt"
-var binaryPath = ""
-
-// Setup/teardown logic for running all tests in the package.
-func TestMain(m *testing.M) {
-	dir, err := os.Getwd()
-	if err != nil {
-		fmt.Printf("could not get current dir: %v", err)
-	}
-
-	binaryPath = filepath.Join(dir, binaryName)
-
-	os.Exit(m.Run())
-}
+var entryPoint = "main.go"
 
 func TestDelay(t *testing.T) {
 	var delay int64 = 1
@@ -127,7 +113,8 @@ func loadFixture(t *testing.T, fixture string) string {
 }
 
 func runBinary(args []string) ([]byte, error) {
-	cmd := exec.Command(binaryPath, args...)
+	fullArgs := append([]string{"run", entryPoint}, args...)
+	cmd := exec.Command("go", fullArgs...)
 	cmd.Env = append(os.Environ(), "GOCOVERDIR=.coverdata")
 	return cmd.CombinedOutput()
 }
@@ -136,7 +123,7 @@ func assertExitCode(t *testing.T, output []byte, expectedExitCode int, err error
 	t.Helper()
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
-			if exitErr.ExitCode() != 0 {
+			if exitErr.ExitCode() != expectedExitCode {
 				t.Fatalf("output:\n%s\nerror:\n%s\n", output, err)
 			}
 		} else {
