@@ -1,25 +1,21 @@
 # NAME
 
-rpt - repeat running a command a number of times
+rpt - run the given command the given number of times
 
 # SYNOPSIS
 
 ```
-rpt [OPTIONS] COMMAND [ARGUMENTS...]
+rpt [OPTIONS] TIMES COMMAND [ARGUMENTS...]
 ```
 
 # DESCRIPTION
 
-Repeatedly run COMMAND with ARGUMENTS.  The number of times to run COMMAND
-is determined by OPTIONS.
+Run `COMMAND ARGUMENTS` TIMES times.
 
 # OPTIONS
 
 **-d=DURATION, --delay=DURATION**
 : wait `DURATION` between runs (default: 0s)
-
-**-t=TIMES, --times=TIMES**
-: number of `TIMES` to run COMMAND (default: 1)
 
 **-v, --verbose**
 : print debugging messages

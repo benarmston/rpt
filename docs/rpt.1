@@ -2,28 +2,23 @@
 .TH rpt 1 "" "" "rpt Manual"
 
 .SH NAME
-rpt \- repeat running a command a number of times
+rpt \- run the given command the given number of times
 
 
 .SH SYNOPSIS
 .EX
-rpt [OPTIONS] COMMAND [ARGUMENTS...]
+rpt [OPTIONS] TIMES COMMAND [ARGUMENTS...]
 .EE
 
 
 .SH DESCRIPTION
-Repeatedly run COMMAND with ARGUMENTS.  The number of times to run COMMAND
-is determined by OPTIONS.
+Run \fBCOMMAND ARGUMENTS\fR TIMES times.
 
 
 .SH OPTIONS
 .TP
 \fB-d=DURATION, --delay=DURATION\fP
 wait \fBDURATION\fR between runs (default: 0s)
-
-.TP
-\fB-t=TIMES, --times=TIMES\fP
-number of \fBTIMES\fR to run COMMAND (default: 1)
 
 .TP
 \fB-v, --verbose\fP
