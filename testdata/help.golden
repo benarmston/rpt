@@ -15,6 +15,7 @@ AUTHOR:
 
 OPTIONS:
    --delay DURATION, -d DURATION  wait DURATION between runs (default: 0s)
+   --fail-fast                    if command fails exit immediately with the same exit code as command. (default: false)
    --verbose, -v                  print debugging messages (default: false)
    --help, -h                     show help
    --version                      print the version

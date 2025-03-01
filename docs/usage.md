@@ -14,6 +14,9 @@ Run `COMMAND ARGUMENTS` TIMES times.
 
 # OPTIONS
 
+**--fail-fast**
+: if command fails exit immediately with the same exit code as command.
+
 **-d=DURATION, --delay=DURATION**
 : wait `DURATION` between runs (default: 0s)
 
