@@ -109,9 +109,7 @@ release:
   make_latest: false
   mode: append
   footer: >-
-    {{- if .Var.repository }}
-    **Full Changelog**: {{ .Var.repository }}/compare/{{ .PreviousTag }}...{{ .Tag }}
-    {{- end }}
+    **Full Changelog**: https://github.com/benarmston/rpt/compare/{{ .PreviousTag }}...{{ .Tag }}
 
     ---
 
