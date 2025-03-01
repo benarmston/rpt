@@ -62,6 +62,11 @@ func NewApp(version Version) *cli.App {
 				Value:   0,
 			},
 			&cli.BoolFlag{
+				Name:  "fail-fast",
+				Usage: "if command fails exit immediately with the same exit code as command.",
+				Value: false,
+			},
+			&cli.BoolFlag{
 				Name:    "verbose",
 				Aliases: []string{"v"},
 				Usage:   "print debugging messages",
@@ -85,6 +90,7 @@ func NewApp(version Version) *cli.App {
 func runRepeatedly(ctx *cli.Context) error {
 	times, _ := strconv.Atoi(ctx.Args().First())
 	verbose := ctx.Bool("verbose")
+	failFast := ctx.Bool("fail-fast")
 	delay := ctx.Duration("delay")
 	for i := range times {
 		if i != 0 {
@@ -104,7 +110,13 @@ func runRepeatedly(ctx *cli.Context) error {
 			log.Printf("Iteration=%d; running cmd=%s\n", i, cmd.String())
 		}
 		if err := runOnce(cmd); err != nil {
-			log.Printf("%s\n", err)
+			if exitErr, ok := err.(*exec.ExitError); ok {
+				if failFast && exitErr.ExitCode() != 0 {
+					break
+				}
+			} else {
+				log.Printf("%s\n", err)
+			}
 		}
 	}
 	return nil
@@ -129,8 +141,5 @@ func runOnce(cmd *exec.Cmd) error {
 	if err = cmd.Start(); err != nil {
 		return fmt.Errorf("starting command: %w", err)
 	}
-	if err = cmd.Wait(); err != nil {
-		return fmt.Errorf("waiting on command: %w", err)
-	}
-	return nil
+	return cmd.Wait()
 }

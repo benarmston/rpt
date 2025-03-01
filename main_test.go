@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -16,6 +17,18 @@ import (
 
 var update = flag.Bool("update", false, "update golden files")
 var entryPoint = "main.go"
+var testdataPath = ""
+
+// Setup/teardown logic for running all tests in the package.
+func TestMain(m *testing.M) {
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		fmt.Println("problems recovering caller information")
+		os.Exit(1)
+	}
+	testdataPath = filepath.Join(filepath.Dir(filename), "testdata")
+	os.Exit(m.Run())
+}
 
 func TestDelay(t *testing.T) {
 	var delay int64 = 1
@@ -59,6 +72,18 @@ func TestGolden(t *testing.T) {
 			"run-3-times.golden",
 			0,
 		},
+		{
+			"Fails fast when --fail-fast given",
+			[]string{"--fail-fast", "2", "go", "run", testProg("fail")},
+			"fail-fast.golden",
+			1,
+		},
+		{
+			"Does not fail fast when --fail-fast not given",
+			[]string{"2", "go", "run", testProg("fail")},
+			"no-fail-fast.golden",
+			0,
+		},
 	}
 
 	for _, tt := range tests {
@@ -81,24 +106,23 @@ func TestGolden(t *testing.T) {
 	}
 }
 
-func fixturePath(t *testing.T, fixture string) string {
-	_, filename, _, ok := runtime.Caller(0)
-	if !ok {
-		t.Fatalf("problems recovering caller information")
-	}
+func testProg(testProg string) string {
+	return filepath.Join(testdataPath, testProg, "main.go")
+}
 
-	return filepath.Join(filepath.Dir(filename), "testdata", fixture)
+func fixturePath(fixture string) string {
+	return filepath.Join(testdataPath, fixture)
 }
 
 func writeFixture(t *testing.T, fixture string, content []byte) {
-	err := os.WriteFile(fixturePath(t, fixture), content, 0644)
+	err := os.WriteFile(fixturePath(fixture), content, 0644)
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
 func loadFixture(t *testing.T, fixture string) string {
-	content, err := os.ReadFile(fixturePath(t, fixture))
+	content, err := os.ReadFile(fixturePath(fixture))
 	if err != nil {
 		t.Fatal(err)
 	}
