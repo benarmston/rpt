@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 
@@ -45,21 +46,15 @@ func NewApp(version Version) *cli.App {
 	app := &cli.App{
 		CustomAppHelpTemplate: appHelpTemplate,
 		Name:                  "rpt",
-		Usage:                 "repeat running a command a number of times",
-		UsageText:             "rpt [OPTIONS] COMMAND [ARGUMENTS...]",
-		Description:           "Repeatedly run COMMAND with ARGUMENTS.  The number of times to run COMMAND\nis determined by OPTIONS.",
+		Usage:                 "run the given command the given number of times",
+		UsageText:             "rpt [OPTIONS] TIMES COMMAND [ARGUMENTS...]",
+		Description:           "Run `COMMAND ARGUMENTS` TIMES times.",
 		HideHelpCommand:       true,
 		Version:               version.Version,
 		Suggest:               true,
 		Authors:               []*cli.Author{{Name: "Ben Armston", Email: ""}},
 		Copyright:             "Copyright 2025 Ben Armston",
 		Flags: []cli.Flag{
-			&cli.Int64Flag{
-				Name:    "times",
-				Aliases: []string{"t"},
-				Usage:   "number of `TIMES` to run COMMAND",
-				Value:   1,
-			},
 			&cli.DurationFlag{
 				Name:    "delay",
 				Aliases: []string{"d"},
@@ -74,8 +69,11 @@ func NewApp(version Version) *cli.App {
 			},
 		},
 		Before: func(ctx *cli.Context) error {
-			if ctx.NArg() < 1 {
-				return errors.New("missing command")
+			if ctx.NArg() < 2 {
+				return errors.New("insufficient arguments")
+			}
+			if _, err := strconv.Atoi(ctx.Args().First()); err != nil {
+				return fmt.Errorf("%s is not an integer", ctx.Args().First())
 			}
 			return nil
 		},
@@ -85,8 +83,8 @@ func NewApp(version Version) *cli.App {
 }
 
 func runRepeatedly(ctx *cli.Context) error {
+	times, _ := strconv.Atoi(ctx.Args().First())
 	verbose := ctx.Bool("verbose")
-	times := ctx.Int64("times")
 	delay := ctx.Duration("delay")
 	for i := range times {
 		if i != 0 {
@@ -95,7 +93,13 @@ func runRepeatedly(ctx *cli.Context) error {
 			}
 			time.Sleep(delay)
 		}
-		cmd := exec.Command(ctx.Args().First(), ctx.Args().Tail()...)
+		args := make([]string, ctx.Args().Len()-2)
+		for i, arg := range ctx.Args().Slice() {
+			if i >= 2 {
+				args[i-2] = arg
+			}
+		}
+		cmd := exec.Command(ctx.Args().Get(1), args...)
 		if verbose {
 			log.Printf("Iteration=%d; running cmd=%s\n", i, cmd.String())
 		}

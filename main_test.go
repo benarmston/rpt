@@ -19,7 +19,7 @@ var entryPoint = "main.go"
 
 func TestDelay(t *testing.T) {
 	var delay int64 = 1
-	args := []string{"--delay", "1s", "--times", "3", "date", "+%s"}
+	args := []string{"--delay", "1s", "3", "date", "+%s"}
 	output, err := runBinary(args)
 	assertExitCode(t, output, 0, err)
 
@@ -54,14 +54,8 @@ func TestGolden(t *testing.T) {
 			0,
 		},
 		{
-			"Runs given command once by default",
-			[]string{"echo", "The command"},
-			"run-once.golden",
-			0,
-		},
-		{
-			"Runs given command --times times",
-			[]string{"--times", "3", "echo", "The command"},
+			"Runs given command the given number times",
+			[]string{"3", "echo", "The command"},
 			"run-3-times.golden",
 			0,
 		},

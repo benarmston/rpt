@@ -15,7 +15,7 @@ for i in $(seq 1 10) ; do echo "The task"; sleep 1 ; done
 With `rpt` we can instead write
 
 ```bash
-rpt --times 10 --delay 1s echo "The task"
+rpt --delay 1s 10 echo "The task"
 ```
 
 ## Installation
