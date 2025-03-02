@@ -93,19 +93,7 @@ func runRepeatedly(ctx *cli.Context) error {
 	failFast := ctx.Bool("fail-fast")
 	delay := ctx.Duration("delay")
 	for i := range times {
-		if i != 0 {
-			if verbose {
-				log.Printf("sleeping=%s\n", delay)
-			}
-			time.Sleep(delay)
-		}
-		args := make([]string, ctx.Args().Len()-2)
-		for i, arg := range ctx.Args().Slice() {
-			if i >= 2 {
-				args[i-2] = arg
-			}
-		}
-		cmd := exec.Command(ctx.Args().Get(1), args...)
+		cmd := buildCommand(ctx)
 		if verbose {
 			log.Printf("Iteration=%d; running cmd=%s\n", i, cmd.String())
 		}
@@ -118,9 +106,26 @@ func runRepeatedly(ctx *cli.Context) error {
 				log.Printf("%s\n", err)
 			}
 		}
+		if i != times-1 {
+			if verbose {
+				log.Printf("sleeping=%s\n", delay)
+			}
+			time.Sleep(delay)
+		}
 	}
 	return nil
 
+}
+
+func buildCommand(ctx *cli.Context) *exec.Cmd {
+	args := make([]string, ctx.Args().Len()-2)
+	for i, arg := range ctx.Args().Slice() {
+		if i >= 2 {
+			args[i-2] = arg
+		}
+	}
+	cmd := exec.Command(ctx.Args().Get(1), args...)
+	return cmd
 }
 
 func runOnce(cmd *exec.Cmd) error {
