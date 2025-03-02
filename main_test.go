@@ -52,6 +52,20 @@ func TestDelay(t *testing.T) {
 			3,
 			0,
 		},
+		{
+			"leading edge; invocation duration less than delay",
+			"There is a 2s delay between start of invocations.  The 1s sleep inside invocation is not relevant as it is less than the 2s delay.",
+			[]string{"--leading-edge", "--delay", "2s", "3", "bash", "-c", "sleep 1; date +%s"},
+			2,
+			0,
+		},
+		{
+			"Run date every 2s - leading edge; invocation exceeds delay",
+			"2s sleep inside invocation determines period. 1s delay between start of invocations is not relevant as invocation exceeds delay and we're using leading edge.",
+			[]string{"--leading-edge", "--delay", "1s", "3", "bash", "-c", "sleep 2; date +%s"},
+			2,
+			0,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.testName, func(t *testing.T) {
