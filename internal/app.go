@@ -62,8 +62,13 @@ func NewApp(version Version) *cli.App {
 				Value:   0,
 			},
 			&cli.BoolFlag{
+				Name:  "leading-edge",
+				Usage: "if given, any provided delay is between the start of\n\tone command invocation and the start of the next.  If\n\tnot given, any provided delay is between the end of\n\tone command invocation and the start of the next\n\t",
+				Value: false,
+			},
+			&cli.BoolFlag{
 				Name:  "fail-fast",
-				Usage: "if command fails exit immediately with the same exit code as command.",
+				Usage: "if command fails exit immediately with the same exit\n\tcode as command",
 				Value: false,
 			},
 			&cli.BoolFlag{
@@ -92,20 +97,16 @@ func runRepeatedly(ctx *cli.Context) error {
 	verbose := ctx.Bool("verbose")
 	failFast := ctx.Bool("fail-fast")
 	delay := ctx.Duration("delay")
+	leadingEdge := ctx.Bool("leading-edge")
 	for i := range times {
-		if i != 0 {
+		var sleepChan <-chan time.Time
+		if leadingEdge {
 			if verbose {
-				log.Printf("sleeping=%s\n", delay)
+				log.Printf("starting timer=%s\n", delay)
 			}
-			time.Sleep(delay)
+			sleepChan = time.After(delay)
 		}
-		args := make([]string, ctx.Args().Len()-2)
-		for i, arg := range ctx.Args().Slice() {
-			if i >= 2 {
-				args[i-2] = arg
-			}
-		}
-		cmd := exec.Command(ctx.Args().Get(1), args...)
+		cmd := buildCommand(ctx)
 		if verbose {
 			log.Printf("Iteration=%d; running cmd=%s\n", i, cmd.String())
 		}
@@ -118,9 +119,31 @@ func runRepeatedly(ctx *cli.Context) error {
 				log.Printf("%s\n", err)
 			}
 		}
+		if i != times-1 {
+			if verbose && leadingEdge {
+				log.Printf("waiting for timer")
+			} else if verbose {
+				log.Printf("sleeping=%s\n", delay)
+			}
+			if !leadingEdge {
+				sleepChan = time.After(delay)
+			}
+			<-sleepChan
+		}
 	}
 	return nil
 
+}
+
+func buildCommand(ctx *cli.Context) *exec.Cmd {
+	args := make([]string, ctx.Args().Len()-2)
+	for i, arg := range ctx.Args().Slice() {
+		if i >= 2 {
+			args[i-2] = arg
+		}
+	}
+	cmd := exec.Command(ctx.Args().Get(1), args...)
+	return cmd
 }
 
 func runOnce(cmd *exec.Cmd) error {

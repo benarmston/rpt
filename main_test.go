@@ -31,24 +31,48 @@ func TestMain(m *testing.M) {
 }
 
 func TestDelay(t *testing.T) {
-	var delay int64 = 1
-	args := []string{"--delay", "1s", "3", "date", "+%s"}
-	output, err := runBinary(args)
-	assertExitCode(t, output, 0, err)
-
-	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
-	var priorTimestamp int64
-	for _, line := range lines {
-		timestamp, err := strconv.ParseInt(line, 10, 64)
-		if err != nil {
-			t.Fatalf("failed to parse timestamp %s, %s", line, err)
-		}
-		if priorTimestamp != 0 {
-			if priorTimestamp+delay != timestamp {
-				t.Fatalf("expected timestamp %d to be %d seconds after prior timestamp %d", timestamp, delay, priorTimestamp)
-			}
-		}
-		priorTimestamp = timestamp
+	tests := []struct {
+		testName         string
+		testDescription  string
+		optionsAndArgs   []string
+		expectedDelay    int64
+		expectedExitCode int
+	}{
+		{
+			"Run date every 1s",
+			"",
+			[]string{"--delay", "1s", "3", "date", "+%s"},
+			1,
+			0,
+		},
+		{
+			"trailing edge",
+			"Run date every 3s.  There is a 2s delay between the end of one invocation and start of next along with a 1s sleep inside the invocation.",
+			[]string{"--delay", "2s", "3", "bash", "-c", "sleep 1; date +%s"},
+			3,
+			0,
+		},
+		{
+			"leading edge; invocation duration less than delay",
+			"There is a 2s delay between start of invocations.  The 1s sleep inside invocation is not relevant as it is less than the 2s delay.",
+			[]string{"--leading-edge", "--delay", "2s", "3", "bash", "-c", "sleep 1; date +%s"},
+			2,
+			0,
+		},
+		{
+			"Run date every 2s - leading edge; invocation exceeds delay",
+			"2s sleep inside invocation determines period. 1s delay between start of invocations is not relevant as invocation exceeds delay and we're using leading edge.",
+			[]string{"--leading-edge", "--delay", "1s", "3", "bash", "-c", "sleep 2; date +%s"},
+			2,
+			0,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.testName, func(t *testing.T) {
+			output, err := runBinary(tt.optionsAndArgs)
+			assertExitCode(t, output, tt.expectedExitCode, err)
+			assertTimestamps(t, output, tt.expectedDelay)
+		})
 	}
 }
 
@@ -147,5 +171,34 @@ func assertExitCode(t *testing.T, output []byte, expectedExitCode int, err error
 		} else {
 			t.Fatalf("output:\n%s\nerror:\n%s\n", output, err)
 		}
+	}
+}
+
+func assertTimestamps(t *testing.T, output []byte, expectedDelay int64) {
+	t.Helper()
+	lines := strings.Split(strings.TrimSpace(string(output)), "\n")
+	var priorTimestamp int64
+	for _, line := range lines {
+		timestamp, err := strconv.ParseInt(line, 10, 64)
+		if err != nil {
+			t.Fatalf("failed to parse timestamp %s, %s", line, err)
+		}
+		if priorTimestamp != 0 {
+			if priorTimestamp+expectedDelay != timestamp {
+				beforeOrAfter := "before"
+				if priorTimestamp <= timestamp {
+					beforeOrAfter = "after"
+				}
+				t.Fatalf(
+					"expected timestamp %d to be %d seconds after prior timestamp %d, but was %d seconds %s",
+					timestamp,
+					expectedDelay,
+					priorTimestamp,
+					timestamp-priorTimestamp,
+					beforeOrAfter,
+				)
+			}
+		}
+		priorTimestamp = timestamp
 	}
 }
