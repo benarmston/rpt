@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -76,12 +75,20 @@ func NewApp(version Version) *cli.Command {
 				Usage:   "print debugging messages",
 			},
 		},
+		Arguments: []cli.Argument{
+			&cli.IntArg{Name: "times", UsageText: "TIMES"},
+			&cli.StringArg{Name: "command", UsageText: "COMMAND"},
+		},
 		Before: func(ctx context.Context, cmd *cli.Command) (context.Context, error) {
 			if cmd.NArg() < 2 {
 				return ctx, errors.New("insufficient arguments")
 			}
-			if _, err := strconv.Atoi(cmd.Args().First()); err != nil {
-				return ctx, fmt.Errorf("%s is not an integer", cmd.Args().First())
+			times, err := strconv.Atoi(cmd.Args().First())
+			if err != nil {
+				return ctx, fmt.Errorf("TIMES must be an integer; got %s", cmd.Args().First())
+			}
+			if times < 1 {
+				return ctx, fmt.Errorf("TIMES must be at least 1; got %s", cmd.Args().First())
 			}
 			return ctx, nil
 		},
@@ -91,7 +98,7 @@ func NewApp(version Version) *cli.Command {
 }
 
 func runRepeatedly(ctx context.Context, cmd *cli.Command) error {
-	times, _ := strconv.Atoi(cmd.Args().First())
+	times := cmd.IntArg("times")
 	verbose := cmd.Bool("verbose")
 	failFast := cmd.Bool("fail-fast")
 	delay := cmd.Duration("delay")
@@ -104,7 +111,7 @@ func runRepeatedly(ctx context.Context, cmd *cli.Command) error {
 			}
 			sleepChan = time.After(delay)
 		}
-		exe := buildExecCommand(cmd)
+		exe := exec.Command(cmd.StringArg("command"), cmd.Args().Slice()...)
 		if verbose {
 			log.Printf("Iteration=%d; running cmd=%s\n", i, exe.String())
 		}
@@ -133,33 +140,10 @@ func runRepeatedly(ctx context.Context, cmd *cli.Command) error {
 
 }
 
-func buildExecCommand(c *cli.Command) *exec.Cmd {
-	args := make([]string, c.Args().Len()-2)
-	for i, arg := range c.Args().Slice() {
-		if i >= 2 {
-			args[i-2] = arg
-		}
-	}
-	cmd := exec.Command(c.Args().Get(1), args...)
-	return cmd
-}
-
 func runOnce(cmd *exec.Cmd) error {
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return fmt.Errorf("creating stdout pipe: %w", err)
-	}
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		return fmt.Errorf("creating stderr pipe: %w", err)
-	}
-	go func() {
-		io.Copy(os.Stdout, stdout) //nolint:errcheck
-	}()
-	go func() {
-		io.Copy(os.Stderr, stderr) //nolint:errcheck
-	}()
-	if err = cmd.Start(); err != nil {
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Start(); err != nil {
 		return fmt.Errorf("starting command: %w", err)
 	}
 	return cmd.Wait()
