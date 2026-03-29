@@ -2,7 +2,15 @@ module github.com/benarmston/rpt
 
 go 1.25.0
 
-require github.com/urfave/cli/v3 v3.8.0
+require (
+	github.com/muesli/reflow v0.3.0
+	github.com/urfave/cli/v3 v3.8.0
+)
+
+require (
+	github.com/mattn/go-runewidth v0.0.12 // indirect
+	github.com/rivo/uniseg v0.2.0 // indirect
+)
 
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect

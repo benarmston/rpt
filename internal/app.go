@@ -7,10 +7,12 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/muesli/reflow/wordwrap"
 	"github.com/urfave/cli/v3"
 )
 
@@ -47,24 +49,35 @@ func NewApp(version Version) *cli.Command {
 		Name:                          "rpt",
 		Usage:                         "run the given command the given number of times",
 		UsageText:                     "rpt [OPTIONS] TIMES COMMAND [-- ARGUMENTS...]",
-		Description:                   "Run `COMMAND ARGUMENTS` TIMES times.",
+		Description:                   wordwrap.String("Run `COMMAND ARGUMENTS` TIMES times.\n\nIf the '--delay' option is given, there will be a delay of the given DURATION after one run ends and the next starts. This provides a guaranteed delay between runs.\n\nIf the '--every' option is given, COMMAND will be run every DURATION. If COMMAND takes longer to run than the given DURATION the next run will start immediately once the current run has completed. This provides a predictable start time for each run (provided COMMAND consistently completes in under DURATION).", 74),
 		HideHelpCommand:               true,
 		Version:                       version.Version,
 		Suggest:                       true,
 		Authors:                       []any{"Ben Armston"},
 		Copyright:                     "Copyright 2025 Ben Armston. Licensed under the MIT License.",
+		MutuallyExclusiveFlags: []cli.MutuallyExclusiveFlags{
+			{
+				Flags: [][]cli.Flag{
+					{
+						&cli.DurationFlag{
+							Name:    "delay",
+							Aliases: []string{"d"},
+							Usage:   "wait `DURATION` between one run ending and\nthe next starting",
+							Value:   0,
+						},
+					},
+					{
+						&cli.DurationFlag{
+							Name:    "every",
+							Aliases: []string{"e"},
+							Usage:   "run COMMAND every `DURATION`. The next run\nwill start DURATION after the previous run started or as soon as the\nprevious run ends if it takes longer than DURATION",
+							Value:   0,
+						},
+					},
+				},
+			},
+		},
 		Flags: []cli.Flag{
-			&cli.DurationFlag{
-				Name:    "delay",
-				Aliases: []string{"d"},
-				Usage:   "wait `DURATION` between runs",
-				Value:   0,
-			},
-			&cli.BoolFlag{
-				Name:  "leading-edge",
-				Usage: "if given, any provided delay is between the\nstart of one command invocation and the start the next. If not given,\nany provided delay is between the end of one invocation and the start of\nthe next",
-				Value: false,
-			},
 			&cli.BoolFlag{
 				Name:  "fail-fast",
 				Usage: "if COMMAND fails, exit immediately with the same exit code\nas COMMAND",
@@ -101,8 +114,17 @@ func runRepeatedly(ctx context.Context, cmd *cli.Command) error {
 	times := cmd.IntArg("times")
 	verbose := cmd.Bool("verbose")
 	failFast := cmd.Bool("fail-fast")
-	delay := cmd.Duration("delay")
-	leadingEdge := cmd.Bool("leading-edge")
+
+	var delay time.Duration
+	var leadingEdge bool
+	if slices.Contains(cmd.FlagNames(), "delay") {
+		delay = cmd.Duration("delay")
+		leadingEdge = false
+	} else if slices.Contains(cmd.FlagNames(), "every") {
+		delay = cmd.Duration("every")
+		leadingEdge = true
+	}
+
 	for i := range times {
 		var sleepChan <-chan time.Time
 		if leadingEdge {

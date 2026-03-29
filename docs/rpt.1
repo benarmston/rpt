@@ -14,22 +14,34 @@ rpt [OPTIONS] TIMES COMMAND [-- ARGUMENTS...]
 .SH DESCRIPTION
 Run \fBCOMMAND ARGUMENTS\fR TIMES times.
 
+.PP
+If the '--delay' option is given, there will be a delay of the given
+DURATION after one run ends and the next starts. This provides a
+guaranteed delay between runs.
+
+.PP
+If the '--every' option is given, COMMAND will be run every DURATION. If
+COMMAND takes longer to run than the given DURATION the next run will
+start immediately once the current run has completed. This provides a
+predictable start time for each run (provided COMMAND consistently
+completes in under DURATION).
+
 
 .SH OPTIONS
-\fB--delay=DURATION, -d=DURATION\fP: wait \fBDURATION\fR between runs (default: 0s)
-
-.PP
-\fB--leading-edge\fP: if given, any provided delay is between the
-start of one command invocation and the start the next. If not given,
-any provided delay is between the end of one invocation and the start of
-the next
-
-.PP
 \fB--fail-fast\fP: if COMMAND fails, exit immediately with the same exit code
 as COMMAND
 
 .PP
 \fB--verbose, -v\fP: print debugging messages
+
+.PP
+\fB--delay=DURATION, -d=DURATION\fP: wait \fBDURATION\fR between one run ending and
+the next starting (default: 0s)
+
+.PP
+\fB--every=DURATION, -e=DURATION\fP: run COMMAND every \fBDURATION\fR\&. The next run
+will start DURATION after the previous run started or as soon as the
+previous run ends if it takes longer than DURATION (default: 0s)
 
 
 .SH AUTHOR
