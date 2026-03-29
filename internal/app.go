@@ -46,7 +46,7 @@ func NewApp(version Version) *cli.Command {
 		CustomRootCommandHelpTemplate: helpTemplate,
 		Name:                          "rpt",
 		Usage:                         "run the given command the given number of times",
-		UsageText:                     "rpt [OPTIONS] TIMES COMMAND [ARGUMENTS...]",
+		UsageText:                     "rpt [OPTIONS] TIMES COMMAND [-- ARGUMENTS...]",
 		Description:                   "Run `COMMAND ARGUMENTS` TIMES times.",
 		HideHelpCommand:               true,
 		Version:                       version.Version,

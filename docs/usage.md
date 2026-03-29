@@ -5,7 +5,7 @@ rpt - run the given command the given number of times
 # SYNOPSIS
 
 ```
-rpt [OPTIONS] TIMES COMMAND [ARGUMENTS...]
+rpt [OPTIONS] TIMES COMMAND [-- ARGUMENTS...]
 ```
 
 # DESCRIPTION

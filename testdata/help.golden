@@ -2,7 +2,7 @@ NAME:
    rpt - run the given command the given number of times
 
 USAGE:
-   rpt [OPTIONS] TIMES COMMAND [ARGUMENTS...]
+   rpt [OPTIONS] TIMES COMMAND [-- ARGUMENTS...]
 
 VERSION:
    dev
