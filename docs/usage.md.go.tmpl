@@ -1,18 +1,18 @@
-{{ if .SectionNum }}# {{ .App.Name }} {{ .SectionNum }} "" "" "{{ .App.Name }} Manual"
+{{ if .SectionNum }}# {{ .Command.Name }} {{ .SectionNum }} "" "" "{{ .Command.Name }} Manual"
 
 {{ end }}# NAME
 
-{{ .App.Name }}{{ if .App.Usage }} - {{ .App.Usage }}{{ end }}
+{{ .Command.Name }}{{ if .Command.Usage }} - {{ .Command.Usage }}{{ end }}
 
 # SYNOPSIS
 
 ```
-{{ if .App.UsageText }}{{ .App.UsageText }}{{ else }}{{ .App.Name }} [GLOBAL OPTIONS] command [COMMAND OPTIONS] [ARGUMENTS...]{{ end }}
+{{ if .Command.UsageText }}{{ .Command.UsageText }}{{ else }}{{ .Command.Name }} [GLOBAL OPTIONS] command [COMMAND OPTIONS] [ARGUMENTS...]{{ end }}
 ```
 
 # DESCRIPTION
 
-{{ if .App.Description }}{{ .App.Description }}{{ end }}{{ if .GlobalArgs }}
+{{ if .Command.Description }}{{ .Command.Description }}{{ end }}{{ if .GlobalArgs }}
 
 # OPTIONS
 {{ range $v := .GlobalArgs }}
@@ -21,12 +21,12 @@
 
 # COMMANDS
 {{ range $v := .Commands }}
-{{ $v }}{{ end }}{{ end }}{{ if .App.Authors }}
+{{ $v }}{{ end }}{{ end }}{{ if .Command.Authors }}
 
 # AUTHOR
-{{ range $v := .App.Authors }}
-{{ $v }}{{ end }}{{ end }}{{ if .App.Copyright }}
+{{ range $v := .Command.Authors }}
+{{ $v }}{{ end }}{{ end }}{{ if .Command.Copyright }}
 
 # COPYRIGHT
 
-{{.App.Copyright}}{{ if .License }}. {{ .License }}{{ end }}{{ end }}
+{{.Command.Copyright}}{{ end }}

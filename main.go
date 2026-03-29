@@ -1,10 +1,11 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 
-	"github.com/benarmston/rpt/internal"
+	rpt "github.com/benarmston/rpt/internal"
 )
 
 var (
@@ -20,12 +21,12 @@ func init() {
 
 func main() {
 	version := rpt.Version{Version: version, Commit: commit, Date: date}
-	app := rpt.NewApp(version)
+	cmd := rpt.NewApp(version)
 
-	if err := app.Run(os.Args); err != nil {
+	if err := cmd.Run(context.Background(), os.Args); err != nil {
 		log.Fatalf(
 			"%s\n\nUsage:  %s\nSee  %s --help for help.",
-			err, app.UsageText, app.HelpName,
+			err, cmd.UsageText, cmd.Name,
 		)
 	}
 }
