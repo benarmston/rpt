@@ -16,25 +16,20 @@ Run \fBCOMMAND ARGUMENTS\fR TIMES times.
 
 
 .SH OPTIONS
-.TP
-\fB--fail-fast\fP
-if command fails exit immediately with the same exit
-code as command
+\fB--delay=DURATION, -d=DURATION\fP: wait \fBDURATION\fR between runs (default: 0s)
 
-.TP
-\fB--leading-edge\fP
-if given, any provided delay is between the start of
-one command invocation and the start of the next.  If
-not given, any provided delay is between the end of
-one command invocation and the start of the next
+.PP
+\fB--leading-edge\fP: if given, any provided delay is between the
+start of one command invocation and the start the next. If not given,
+any provided delay is between the end of one invocation and the start of
+the next
 
-.TP
-\fB-d=DURATION, --delay=DURATION\fP
-wait \fBDURATION\fR between runs (default: 0s)
+.PP
+\fB--fail-fast\fP: if COMMAND fails, exit immediately with the same exit code
+as COMMAND
 
-.TP
-\fB-v, --verbose\fP
-print debugging messages
+.PP
+\fB--verbose, -v\fP: print debugging messages
 
 
 .SH AUTHOR

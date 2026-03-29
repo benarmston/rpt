@@ -18,8 +18,6 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
-    flags:
-      - -tags=urfave_cli_no_docs
     goos:
       - linux
       # - darwin

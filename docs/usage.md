@@ -14,22 +14,17 @@ Run `COMMAND ARGUMENTS` TIMES times.
 
 # OPTIONS
 
-**--fail-fast**
-: if command fails exit immediately with the same exit
-	code as command
+**--delay=DURATION, -d=DURATION**: wait `DURATION` between runs (default: 0s)
 
-**--leading-edge**
-: if given, any provided delay is between the start of
-	one command invocation and the start of the next.  If
-	not given, any provided delay is between the end of
-	one command invocation and the start of the next
-	
+**--leading-edge**: if given, any provided delay is between the
+start of one command invocation and the start the next. If not given,
+any provided delay is between the end of one invocation and the start of
+the next
 
-**-d=DURATION, --delay=DURATION**
-: wait `DURATION` between runs (default: 0s)
+**--fail-fast**: if COMMAND fails, exit immediately with the same exit code
+as COMMAND
 
-**-v, --verbose**
-: print debugging messages
+**--verbose, -v**: print debugging messages
 
 
 
