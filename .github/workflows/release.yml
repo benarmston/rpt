@@ -29,7 +29,7 @@ jobs:
       - name: Check docs
         run: go run -tags docs ./docs/ && git diff --exit-code
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v6
+        uses: goreleaser/goreleaser-action@v7
         with:
           # either 'goreleaser' (default) or 'goreleaser-pro'
           distribution: goreleaser
