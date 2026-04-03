@@ -28,20 +28,21 @@ completes in under DURATION).
 
 
 .SH OPTIONS
-\fB--fail-fast\fP: if COMMAND fails, exit immediately with the same exit code
-as COMMAND
+\fB--fail-fast\fP: if COMMAND fails, exit immediately with the
+	same exit code as COMMAND
 
 .PP
 \fB--verbose, -v\fP: print debugging messages
 
 .PP
-\fB--delay=DURATION, -d=DURATION\fP: wait \fBDURATION\fR between one run ending and
-the next starting (default: 0s)
+\fB--delay=DURATION, -d=DURATION\fP: wait \fBDURATION\fR between one run ending and the
+	next starting (default: 0s)
 
 .PP
-\fB--every=DURATION, -e=DURATION\fP: run COMMAND every \fBDURATION\fR\&. The next run
-will start DURATION after the previous run started or as soon as the
-previous run ends if it takes longer than DURATION (default: 0s)
+\fB--every=DURATION, -e=DURATION\fP: run COMMAND every \fBDURATION\fR\&. The next run will
+	start DURATION after the previous run started
+	or as soon as the previous run ends if it
+	takes longer than DURATION (default: 0s)
 
 
 .SH AUTHOR

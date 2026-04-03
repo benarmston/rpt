@@ -62,7 +62,7 @@ func NewApp(version Version) *cli.Command {
 						&cli.DurationFlag{
 							Name:    "delay",
 							Aliases: []string{"d"},
-							Usage:   "wait `DURATION` between one run ending and\nthe next starting",
+							Usage:   "wait `DURATION` between one run ending and the\n\tnext starting",
 							Value:   0,
 						},
 					},
@@ -70,7 +70,7 @@ func NewApp(version Version) *cli.Command {
 						&cli.DurationFlag{
 							Name:    "every",
 							Aliases: []string{"e"},
-							Usage:   "run COMMAND every `DURATION`. The next run\nwill start DURATION after the previous run started or as soon as the\nprevious run ends if it takes longer than DURATION",
+							Usage:   "run COMMAND every `DURATION`. The next run will\n\tstart DURATION after the previous run started\n\tor as soon as the previous run ends if it\n\ttakes longer than DURATION",
 							Value:   0,
 						},
 					},
@@ -80,7 +80,7 @@ func NewApp(version Version) *cli.Command {
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
 				Name:  "fail-fast",
-				Usage: "if COMMAND fails, exit immediately with the same exit code\nas COMMAND",
+				Usage: "if COMMAND fails, exit immediately with the\n\tsame exit code as COMMAND",
 			},
 			&cli.BoolFlag{
 				Name:    "verbose",

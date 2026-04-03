@@ -24,17 +24,18 @@ completes in under DURATION).
 
 # OPTIONS
 
-**--fail-fast**: if COMMAND fails, exit immediately with the same exit code
-as COMMAND
+**--fail-fast**: if COMMAND fails, exit immediately with the
+	same exit code as COMMAND
 
 **--verbose, -v**: print debugging messages
 
-**--delay=DURATION, -d=DURATION**: wait `DURATION` between one run ending and
-the next starting (default: 0s)
+**--delay=DURATION, -d=DURATION**: wait `DURATION` between one run ending and the
+	next starting (default: 0s)
 
-**--every=DURATION, -e=DURATION**: run COMMAND every `DURATION`. The next run
-will start DURATION after the previous run started or as soon as the
-previous run ends if it takes longer than DURATION (default: 0s)
+**--every=DURATION, -e=DURATION**: run COMMAND every `DURATION`. The next run will
+	start DURATION after the previous run started
+	or as soon as the previous run ends if it
+	takes longer than DURATION (default: 0s)
 
 
 
