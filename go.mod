@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/muesli/reflow v0.3.0
-	github.com/urfave/cli/v3 v3.8.0
+	github.com/urfave/cli/v3 v3.9.0
 )
 
 require (
