@@ -1,6 +1,6 @@
 module github.com/benarmston/rpt
 
-go 1.25.0
+go 1.26.8
 
 require (
 	github.com/muesli/reflow v0.3.0
