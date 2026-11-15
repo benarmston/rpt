@@ -76,12 +76,22 @@ func NewApp(version Version) *cli.Command {
 					},
 				},
 			},
+			{
+				Flags: [][]cli.Flag{
+					{
+						&cli.BoolFlag{
+							Name:  "fail-fast",
+							Usage: "if COMMAND fails, exit immediately with the\n\tsame exit code as COMMAND",
+						},
+						&cli.BoolFlag{
+							Name:  "pass-fast",
+							Usage: "if COMMAND succeeds, exit immediately with\n\texit code 0",
+						},
+					},
+				},
+			},
 		},
 		Flags: []cli.Flag{
-			&cli.BoolFlag{
-				Name:  "fail-fast",
-				Usage: "if COMMAND fails, exit immediately with the\n\tsame exit code as COMMAND",
-			},
 			&cli.BoolFlag{
 				Name:    "verbose",
 				Aliases: []string{"v"},
@@ -114,6 +124,7 @@ func runRepeatedly(ctx context.Context, cmd *cli.Command) error {
 	times := cmd.IntArg("times")
 	verbose := cmd.Bool("verbose")
 	failFast := cmd.Bool("fail-fast")
+	passFast := cmd.Bool("pass-fast")
 
 	var delay time.Duration
 	var leadingEdge bool
@@ -137,7 +148,11 @@ func runRepeatedly(ctx context.Context, cmd *cli.Command) error {
 		if verbose {
 			log.Printf("Iteration=%d; running cmd=%s\n", i, exe.String())
 		}
-		if err := runOnce(exe); err != nil {
+		err := runOnce(exe)
+		if passFast && err == nil {
+			break
+		}
+		if err != nil {
 			if exitErr, ok := err.(*exec.ExitError); ok {
 				if failFast && exitErr.ExitCode() != 0 {
 					break

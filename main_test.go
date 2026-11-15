@@ -105,7 +105,19 @@ func TestGolden(t *testing.T) {
 		{
 			"Does not fail fast when --fail-fast not given",
 			[]string{"2", "go", "run", testProg("fail")},
-			"no-fail-fast.golden",
+			"fail-prog-twice.golden",
+			0,
+		},
+		{
+			"Exits fast when --pass-fast given and command is successful",
+			[]string{"--pass-fast", "2", "echo", "expected output"},
+			"pass-fast.golden",
+			0,
+		},
+		{
+			"Does not exit fast when --pass-fast given and command is not successful",
+			[]string{"--pass-fast", "2", "go", "run", testProg("fail")},
+			"fail-prog-twice.golden",
 			0,
 		},
 	}

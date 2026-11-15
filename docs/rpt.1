@@ -28,10 +28,6 @@ completes in under DURATION).
 
 
 .SH OPTIONS
-\fB--fail-fast\fP: if COMMAND fails, exit immediately with the
-	same exit code as COMMAND
-
-.PP
 \fB--verbose, -v\fP: print debugging messages
 
 .PP
@@ -43,6 +39,14 @@ completes in under DURATION).
 	start DURATION after the previous run started
 	or as soon as the previous run ends if it
 	takes longer than DURATION (default: 0s)
+
+.PP
+\fB--fail-fast\fP: if COMMAND fails, exit immediately with the
+	same exit code as COMMAND
+
+.PP
+\fB--pass-fast\fP: if COMMAND succeeds, exit immediately with
+	exit code 0
 
 
 .SH AUTHOR

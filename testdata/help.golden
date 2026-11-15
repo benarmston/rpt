@@ -24,8 +24,6 @@ AUTHOR:
    Ben Armston
 
 OPTIONS:
-   --fail-fast                    if COMMAND fails, exit immediately with the
-                                  same exit code as COMMAND
    --verbose, -v                  print debugging messages
    --help, -h                     show help
    --version                      print the version
@@ -35,6 +33,10 @@ OPTIONS:
                                   start DURATION after the previous run started
                                   or as soon as the previous run ends if it
                                   takes longer than DURATION (default: 0s)
+   --fail-fast                    if COMMAND fails, exit immediately with the
+                                  same exit code as COMMAND
+   --pass-fast                    if COMMAND succeeds, exit immediately with
+                                  exit code 0
 
 COPYRIGHT:
    Copyright 2025 Ben Armston. Licensed under the MIT License.
