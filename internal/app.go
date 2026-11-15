@@ -155,7 +155,7 @@ func runRepeatedly(ctx context.Context, cmd *cli.Command) error {
 		if err != nil {
 			if exitErr, ok := err.(*exec.ExitError); ok {
 				if failFast && exitErr.ExitCode() != 0 {
-					break
+					return SilentExitError{ExitCode: exitErr.ExitCode(), exitError: exitErr}
 				}
 			} else {
 				log.Printf("%s\n", err)
@@ -184,4 +184,14 @@ func runOnce(cmd *exec.Cmd) error {
 		return fmt.Errorf("starting command: %w", err)
 	}
 	return cmd.Wait()
+}
+
+// Wrapper around exec.ExitError that avoids the default handling by urfave/cli.
+type SilentExitError struct {
+	ExitCode  int
+	exitError error
+}
+
+func (ee SilentExitError) Error() string {
+	return ee.exitError.Error()
 }

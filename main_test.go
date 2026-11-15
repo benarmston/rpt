@@ -175,13 +175,25 @@ func runBinary(args []string) ([]byte, error) {
 
 func assertExitCode(t *testing.T, output []byte, expectedExitCode int, err error) {
 	t.Helper()
-	if err != nil {
-		if exitErr, ok := err.(*exec.ExitError); ok {
-			if exitErr.ExitCode() != expectedExitCode {
+	if expectedExitCode == 0 {
+		if err != nil {
+			if exitErr, ok := err.(*exec.ExitError); ok {
+				t.Fatalf("expected exitCode=0, got exitCode=%d\n", exitErr.ExitCode())
+			} else {
+				t.Fatalf("expected exitCode=0, got error=%s\n", err)
+			}
+		}
+	} else {
+		if err != nil {
+			if exitErr, ok := err.(*exec.ExitError); ok {
+				if exitErr.ExitCode() != expectedExitCode {
+					t.Fatalf("output:\n%s\nerror:\n%s\n", output, err)
+				}
+			} else {
 				t.Fatalf("output:\n%s\nerror:\n%s\n", output, err)
 			}
 		} else {
-			t.Fatalf("output:\n%s\nerror:\n%s\n", output, err)
+			t.Fatalf("expected exitCode=%d, got exitCode=0\n", expectedExitCode)
 		}
 	}
 }
